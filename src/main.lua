@@ -260,6 +260,8 @@ local function getRemoteFunc(remoteObj)
 end
 
 local applyRedirectedRemoteSecurity do
+	local userId = game:GetService("Players").LocalPlayer.UserId
+
 	-- simple XOR encryption algorithm, nothing special
 	local function XORSource(source: string, key: number): string
 		local randomObj = Random.new(key)
@@ -289,7 +291,7 @@ local applyRedirectedRemoteSecurity do
 		local randIdx = notSameRandNumber(2, (argsLenght - 3), srcArgIdx, verificationIdx)
 		local nonceIdx = notSameRandNumber(2, (argsLenght - 3), srcArgIdx, verificationIdx, randIdx)
 		local nonceOffset = Random.new((argsLenght / verificationIdx) % (verificationIdx * 2)):NextInteger(8, argsLenght)
-		local XORKey = math.ceil(((((argsLenght / randIdx) % verificationIdx) * nonceIdx) * (verificationIdx * srcArgIdx)) * nonceOffset)
+		local XORKey = math.ceil(((((argsLenght / randIdx) % verificationIdx) * nonceIdx) * (userId * srcArgIdx)) * nonceOffset)
 
 		generatedArgs[1] = (
 			if (math.random(1, 2) == 2) then
